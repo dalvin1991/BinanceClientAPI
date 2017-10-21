@@ -1,0 +1,20 @@
+{
+    "name": "dalvin1991/BinanceClientAPI",
+    "repositories": [ {
+            "type": "vcs",
+            "url": "https://github.com/dalvin1991/BinanceClientAPI.git"
+    }],
+    "require": {
+        "ratchet/pawl": "^0.3.0",
+        "dalvin1991/BinanceClientAPI": "master"
+    },
+    "config": {
+    	"optimize-autoloader": true,
+        "minimum-stability": "dev"
+    },
+    "autoload": {
+        "classmap": [
+          "BinanceClientAPI.php"
+        ]
+    }
+}
