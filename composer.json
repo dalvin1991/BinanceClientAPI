@@ -1,0 +1,26 @@
+{
+    "name": "dalvin/binance-client-api",
+	"repositories": [ {
+            "type": "vcs",
+            "url": "https://github.com/dalvin1991/BinanceClientAPI"
+    }],
+    "description": "Binance Client API",
+    "require": {
+        "ratchet/pawl": "^0.3.0"
+    },
+    "authors": [
+        {
+            "name": "dalvin1991",
+            "email": "dalvinteng1991@hotmail.com"
+        }
+    ],
+	"config": {
+    	"optimize-autoloader": true,
+        "minimum-stability": "dev"
+    },
+    "autoload": {
+        "classmap": [
+          "php-binance-api.php"
+        ]
+    }
+}
