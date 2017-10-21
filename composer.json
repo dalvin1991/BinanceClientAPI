@@ -6,11 +6,11 @@
     }],
     "require": {
         "ratchet/pawl": "^0.3.0",
-        "dalvin1991/BinanceClientAPI": "master"
+        "dalvin1991/binance_client_api": "dev-master"
     },
     "config": {
     	"optimize-autoloader": true,
-        "minimum-stability": "master"
+        "minimum-stability": "dev"
     },
     "autoload": {
         "classmap": [
