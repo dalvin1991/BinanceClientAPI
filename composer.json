@@ -1,5 +1,5 @@
 {
-    "name": "dalvin1991/BinanceClientAPI",
+    "name": "dalvin1991/binance_client_api",
     "repositories": [ {
             "type": "vcs",
             "url": "https://github.com/dalvin1991/BinanceClientAPI.git"
