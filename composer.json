@@ -6,7 +6,8 @@
     }],
     "description": "Binance Client API",
     "require": {
-        "ratchet/pawl": "^0.3.0"
+        "ratchet/pawl": "^0.3.0",
+		"dalvin1991/BinanceClientAPI": "master"
     },
     "authors": [
         {
