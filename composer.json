@@ -10,7 +10,7 @@
     },
     "config": {
     	"optimize-autoloader": true,
-        "minimum-stability": "dev"
+        "minimum-stability": "master"
     },
     "autoload": {
         "classmap": [
