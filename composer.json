@@ -5,8 +5,7 @@
             "url": "https://github.com/dalvin1991/BinanceClientAPI.git"
     }],
     "require": {
-        "ratchet/pawl": "^0.3.0",
-        "dalvin1991/binance_client_api": "dev-master"
+        "ratchet/pawl": "^0.3.0"
     },
     "config": {
     	"optimize-autoloader": true,
