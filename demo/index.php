@@ -1,7 +1,7 @@
 <?php
 //error_reporting(0);
 require './vendor/autoload.php';
-$api = new BinanceClientAPI\API("FMFwgZAdNfPseNSVe4mpaRgb1tpiQJ4RfAo7XmKVpWzsJleCEl3QDB2BhW78OpSH","AD3x82U2FrEWXnnVZtptRwAHcE8CBubJkqHYz7mLHvOXvUhNuNpMjUoBTUWMYghK");
+$api = new BinanceClientAPI\API("<key>","<secret>");
 
 // Get latest price of a symbol
 //echo "<h3>getPrices()</h3>";
