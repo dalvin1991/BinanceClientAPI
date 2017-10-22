@@ -1,296 +1,166 @@
 # PHP Binance API
-This project is designed to help you make your own projects that interact with the [Binance API](https://www.binance.com/restapipub.html). You can stream candlestick chart data, market depth, or use other advanced features such as setting stop losses and iceberg orders. This project seeks to have complete API coverage including WebSockets.
+This PHP plugin can hep you integrate with the Binance Excahnge API easier. Binance API: https://www.binance.com/restapipub.html
 
 #### Installation
 ```
-composer require jaggedsoft/php-binance-api
-```
-<details>
- <summary>Click for help with installation</summary>
+*Note Require you to install composer which can found in https://getcomposer.org/
 
-## Install Composer
-If the above step didn't work, install composer and try again.
-#### Debian / Ubuntu
+composer require dalvin1991/binance_client_api
 ```
-sudo apt-get install curl php5-cli git
-curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
-```
-Composer not found? Use this command instead:
-```
-php composer.phar require "jaggedsoft/php-binance-api @dev"
-```
-
-#### Windows:
-[Download installer for Windows](https://getcomposer.org/doc/00-intro.md#installation-windows)
-
-
-
-</details>
 
 #### Getting started
 ```php
-require 'vendor/autoload.php';
-$api = new Binance\API("<api key>","<secret>");
+require 'vendor/autoload.php'; //the directory of the autoload.php in vendor folder 
+$api = new BinanceClientAPI\API("<api key>","<secret>"); //the initialize of the API instance
 ```
 
-#### Get latest price of a symbol
+#### Get latest price for each cryptocurrency
 ```php
-$ticker = $api->prices();
-print_r($ticker); // List prices of all symbols
-echo "Price of BNB: {$ticker['BNBBTC']} BTC.".PHP_EOL;
+echo "<h3>getPrices()</h3>";
+$ticker = $api->getPrices();
+echo "<pre>".print_r($ticker,true)."</pre>";
 ```
 
-#### Get balances for all of your positions, including estimated BTC value
+#### Get all of your balance for all cryptocurrency
 ```php
-$balances = $api->balances($ticker);
-print_r($balances);
-echo "BTC owned: ".$balances['BTC']['available'].PHP_EOL;
-echo "ETH owned: ".$balances['ETH']['available'].PHP_EOL;
-echo "Estimated Value: ".$api->btc_value." BTC".PHP_EOL;
+echo "<h3>getBalances()</h3>";
+$balances = $api->getBalances($ticker);
+echo "<pre>".print_r($balances,true)."</pre>";
 ```
 
-<details>
- <summary>View Response</summary>
-
-```
-    [WTC] => Array
-        (
-            [available] => 909.61000000
-            [onOrder] => 0.00000000
-            [btcValue] => 0.94015470
-        )
-
-    [BNB] => Array
-        (
-            [available] => 1045.94316876
-            [onOrder] => 0.00000000
-            [btcValue] => 0.21637426
-        )
-```
-</details>
-
-
-#### Get all bid/ask prices
+#### Get all of cryptocurrency bid/ask prices
 ```php
-$bookPrices = $api->bookPrices();
-print_r($bookPrices);
+echo "<h3>getBookPrices()</h3>";
+$bookPrices = $api->getBookPrices();
+echo "<pre>".print_r($bookPrices,true)."</pre>";
 ```
 
-#### Place a LIMIT order
+#### Place a Buy LIMIT order
 ```php
 $quantity = 1;
 $price = 0.0005;
-$order = $api->buy("BNBBTC", $quantity, $price);
+$pair = "BNBBTC";
+$order = $api->buyOrder($pair, $quantity, $price);
 ```
 
+#### Place a Sell LIMIT order
 ```php
 $quantity = 1;
-$price = 0.0006;
-$order = $api->sell("BNBBTC", $quantity, $price);
+$price = 0.0005;
+$pair = "BNBBTC";
+$order = $api->sellOrder($pair, $quantity, $price);
 ```
 
-#### Place a MARKET order
+#### Place a Buy MARKET order
 ```php
 $quantity = 1;
-$order = $api->buy("BNBBTC", $quantity, 0, "MARKET");
+$pair = "BNBBTC";
+$order = $api->buyOrder($pair, $quantity, 0, "MARKET");
 ```
 
+#### Place a Sell MARKET order
 ```php
-$quantity = 0.01;
-$order = $api->sell("ETHBTC", $quantity, 0, "MARKET");
+$quantity = 1;
+$pair = "BNBBTC";
+$order = $api->buyOrder($pair, $quantity, 0, "MARKET");
 ```
 
 #### Place a STOP LOSS order
 ```php
-// When the stop is reached, a stop order becomes a market order
 $quantity = 1;
-$price = 0.5; // Try to sell it for 0.5 btc
-$stopPrice = 0.4; // Sell immediately if price goes below 0.4 btc
-$order = $api->sell("BNBBTC", $quantity, $price, "LIMIT", ["stopPrice"=>$stopPrice]);
-print_r($order);
+$price = 0.5; // Target btc sell value
+$stopPrice = 0.4; // Sell immediately if price goes below 0.4 btc with market order
+$pair = "BNBBTC";
+$order = $api->sellOrder($pair, $quantity, $price, "LIMIT", ["stopPrice"=>$stopPrice]);
+echo "<pre>".print_r($order,true)."</pre>";
 ```
 
 #### Place an ICEBERG order
 ```php
-// Iceberg orders are intended to conceal the true order quantity.
 $quantity = 1;
 $price = 0.5;
 $icebergQty = 10;
-$order = $api->sell("BNBBTC", $quantity, $price, "LIMIT", ["icebergQty"=>$icebergQty]);
-print_r($order);
+$pair = "BNBBTC";
+$order = $api->sellOrder($pair, $quantity, $price, "LIMIT", ["icebergQty"=>$icebergQty]);
+echo "<pre>".print_r($order,true)."</pre>";
 ```
 
-#### Complete Trade History
+#### Complete History Complete Trade
 ```php
-$history = $api->history("BNBBTC");
-print_r($history);
+echo "<h3>getHistoryOrders()</h3>";
+$pair="ETHBTC";
+$history = $api->getHistoryOrders($pair);
+echo "<pre>".print_r($history,true)."</pre>";
 ```
-
-<details>
- <summary>View Response</summary>
-
-```
-Array (
-    [0] => Array (
-            [id] => 831585
-            [orderId] => 3635308
-            [price] => 0.00028800
-            [qty] => 4.00000000
-            [commission] => 0.00200000
-            [commissionAsset] => BNB
-            [time] => 1504805561369
-            [isBuyer] => 1
-            [isMaker] =>
-            [isBestMatch] => 1
-        )
-
-    [1] => Array (
-            [id] => 1277334
-            [orderId] => 6126625
-            [price] => 0.00041054
-            [qty] => 16.00000000
-            [commission] => 0.00800000
-            [commissionAsset] => BNB
-            [time] => 1507059468604
-            [isBuyer] => 1
-            [isMaker] =>
-            [isBestMatch] => 1
-        )
-
-    [2] => Array (
-            [id] => 1345995
-            [orderId] => 6407202
-            [price] => 0.00035623
-            [qty] => 30.00000000
-            [commission] => 0.01500000
-            [commissionAsset] => BNB
-            [time] => 1507434311489
-            [isBuyer] => 1
-            [isMaker] => 1
-            [isBestMatch] => 1
-        )
-)
-```
-</details>
 
 #### Get Market Depth
 ```php
-$depth = $api->depth("ETHBTC");
-print_r($depth);
+echo "<h3>getDepth()</h3>";
+$pair="ETHBTC";
+$depth = $api->getDepth($pair);
+echo "<pre>".print_r($depth,true)."</pre>";
 ```
 
 #### Get Open Orders
 ```php
-$openorders = $api->openOrders("BNBBTC");
-print_r($openorders);
+echo "<h3>getOpenOrders()</h3>";
+$pair="BTCUSDT";
+$openorders = $api->getOpenOrders($pair);
+echo "<pre>".print_r($openorders,true)."</pre>";
 ```
 
 #### Get Order Status
 ```php
-$orderid = "7610385";
-$orderstatus = $api->orderStatus("ETHBTC", $orderid);
-print_r($orderstatus);
+echo "<h3>getOrderStatus()</h3>";
+$orderid = <orderid>; //orderid can get from getOpenOrders() method
+$pair="BTCUSDT";
+$orderstatus = $api->getOrderStatus($pair, $orderid);
+echo "<pre>".print_r($orderstatus,true)."</pre>";
 ```
 
 #### Cancel an Order
 ```php
-$response = $api->cancel("ETHBTC", $orderid);
-print_r($response);
+echo "<h3>cancelOrder()</h3>";
+$pair="BTCUSDT";
+$orderid = <orderid>; //orderid can get from getOpenOrders() method
+$response = $api->cancelOrder($pair, $orderid);
+echo "<pre>".print_r($response,true)."</pre>";
 ```
 
 #### Aggregate Trades List
 ```php
-$trades = $api->aggTrades("BNBBTC");
-print_r($trades);
+echo "<h3>getAggTrades()</h3>";
+$pair="ETHBTC";
+$trades = $api->getAggTrades($pair);
+echo "<pre>".print_r($trades,true)."</pre>";
 ```
 
-#### Get all account orders; active, canceled, or filled.
+#### Get ALl Order (active, canceled, filled) for the pair requested
 ```php
-$orders = $api->orders("BNBBTC");
-print_r($orders);
+$pair="BTCUSDT";
+$orders = $api->getOrders($pair);
+echo "<pre>".print_r($orders,true)."</pre>";
 ```
 
-#### Get Kline/candlestick data for a symbol
+#### Get candlestick data for the pair requested.
 ```php
-//Periods: 1m,3m,5m,15m,30m,1h,2h,4h,6h,8h,12h,1d,3d,1w,1M
-$ticks = $api->candlesticks("BNBBTC", "5m");
-print_r($ticks);
+//Interval: 1m,3m,5m,15m,30m,1h,2h,4h,6h,8h,12h,1d,3d,1w,1M
+echo "<h3>getCandleSticks()</h3>";
+$interval="15m";
+$pair="ETHBTC";
+$ticks = $api->getCandleSticks($pair, $interval);
+echo "<pre>".print_r($ticks,true)."</pre>";
 ```
-<details>
- <summary>View Response</summary>
-
-```
-   [1508560200000] => Array
-        (
-            [open] => 0.00019691
-            [high] => 0.00019695
-            [low] => 0.00019502
-            [close] => 0.00019503
-            [volume] => 0.13712290
-        )
-
-    [1508560500000] => Array
-        (
-            [open] => 0.00019502
-            [high] => 0.00019693
-            [low] => 0.00019501
-            [close] => 0.00019692
-            [volume] => 1.03216357
-        )
-
-    [1508560800000] => Array
-        (
-            [open] => 0.00019692
-            [high] => 0.00019692
-            [low] => 0.00019689
-            [close] => 0.00019692
-            [volume] => 0.22270990
-        )
-```
-</details>
 
 ## WebSocket API
 
 #### Realtime Chart Cache via WebSockets
 ```php
-$api->chart(["BNBBTC"], "15m", function($api, $symbol, $chart) {
+$api->getChart(["BNBBTC"], "15m", function($api, $symbol, $chart) {
     echo "{$symbol} chart update\n";
-    print_r($chart);
-});
+    echo "<pre>".print_r($chart,true)."</pre>";
+//});
 ```
-<details>
- <summary>View Response</summary>
-
-```
-   [1508560200000] => Array
-        (
-            [open] => 0.00019691
-            [high] => 0.00019695
-            [low] => 0.00019502
-            [close] => 0.00019503
-            [volume] => 0.13712290
-        )
-
-    [1508560500000] => Array
-        (
-            [open] => 0.00019502
-            [high] => 0.00019693
-            [low] => 0.00019501
-            [close] => 0.00019692
-            [volume] => 1.03216357
-        )
-
-    [1508560800000] => Array
-        (
-            [open] => 0.00019692
-            [high] => 0.00019692
-            [low] => 0.00019689
-            [close] => 0.00019692
-            [volume] => 0.22270990
-        )
-```
-</details>
-
 
 #### Trade Updates via WebSocket
 ```php
@@ -304,47 +174,46 @@ $api->trades(["BNBBTC"], function($api, $symbol, $trades) {
 #### Realtime updated depth cache via WebSockets
 ```php
 $api->depthCache(["BNBBTC"], function($api, $symbol, $depth) {
-	echo "{$symbol} depth cache update".PHP_EOL;
-	//print_r($depth); // Print all depth data
-	$limit = 11; // Show only the closest asks/bids
-	$sorted = $api->sortDepth($symbol, $limit);
-	$bid = $api->first($sorted['bids']);
-	$ask = $api->first($sorted['asks']);
-	echo $api->displayDepth($sorted);
-	echo "ask: {$ask}".PHP_EOL;
-	echo "bid: {$bid}".PHP_EOL;
+	//the depth value is inside the $depth
+    echo "{$symbol} depth cache update\n";
+    $limit = 10; // Show how many depth level for asks/bids
+    $sorted = $api->sortDepth($symbol, $limit);
+    $bid = $api->first($sorted['bids']);
+    $ask = $api->first($sorted['asks']);
+    echo $api->displayDepth($sorted);
+    echo "ask: {$ask}</br>";
+    echo "bid: {$bid}</br><hr>";
 });
 ```
-<details>
- <summary>View Response</summary>
 
+#### Get realtime updated depth cache via WebSockets
+```php
+$api->depthCache(["BNBBTC"], function($api, $symbol, $depth) {
+	//the depth value is inside the $depth
+    echo "{$symbol} depth cache update\n";
+    $limit = 10; // Show how many depth level for asks/bids
+    $sorted = $api->sortDepth($symbol, $limit);
+    $bid = $api->first($sorted['bids']);
+    $ask = $api->first($sorted['asks']);
+    echo $api->displayDepth($sorted);
+    echo "ask: {$ask}</br>";
+    echo "bid: {$bid}</br><hr>";
+});
 ```
-asks:
-0.00020649      1,194      0.24654906
-0.00020600        375      0.07725000
-0.00020586          4      0.00823440
-0.00020576          1      0.00205760
-0.00020564        226      0.04647464
-0.00020555         38      0.00781090
-0.00020552         98      0.02014096
-0.00020537        121      0.02484977
-0.00020520         46      0.09439200
-0.00020519         29      0.05950510
-0.00020518        311      0.06381098
-bids:
-0.00022258      5,142      1.14450636
-0.00020316          7      0.00142212
-0.00020315         82      0.01665830
-0.00020314         16      0.00325024
-0.00020313        512      0.10400256
-0.00020238          5      0.01011900
-0.00020154      1,207      0.24325878
-0.00020151          1      0.02015100
-0.00020150          3      0.60450000
-0.00020140        217      0.04370380
-0.00020135          1      0.02013500
-ask: 0.00020518
-bid: 0.00022258
 
+#### Get realtime chart data via WebSockets
+```php
+//Interval: 1m,3m,5m,15m,30m,1h,2h,4h,6h,8h,12h,1d,3d,1w,1M
+$api->getChart(["BNBBTC"], "15m", function($api, $symbol, $chart) {
+    echo "{$symbol} chart update\n";
+    echo "<pre>".print_r($chart,true)."</pre>";
+});
 ```
-</details>
+
+#### Get realtime updated done trade data via WebSockets
+```php
+$api->getTradesA(["BTCUSDT"], function($api, $symbol, $trades) {
+    echo "{$symbol} trades update".PHP_EOL;
+    echo "<pre>".print_r($trades,true)."</pre></br><hr>";
+});
+```
