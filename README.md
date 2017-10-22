@@ -1,6 +1,6 @@
 # PHP Binance API
 This PHP plugin can hep you integrate with the Binance Excahnge API easier. Binance API: https://www.binance.com/restapipub.html
-
+*Example is inside demo folder, you may uncommend the code and try the api by copy the indexphp to your project root folder.
 #### Installation
 ```
 *Note Require to install composer which can found in https://getcomposer.org/
