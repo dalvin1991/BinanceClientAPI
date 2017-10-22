@@ -3,7 +3,7 @@ This PHP plugin can hep you integrate with the Binance Excahnge API easier. Bina
 
 #### Installation
 ```
-*Note Require you to install composer which can found in https://getcomposer.org/
+*Note Require to install composer which can found in https://getcomposer.org/
 
 composer require dalvin1991/binance_client_api
 ```
